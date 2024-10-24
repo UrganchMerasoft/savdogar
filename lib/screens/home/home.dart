@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_savdogar/screens/dashboard/dashboard.dart';
 import 'package:flutter_savdogar/screens/dics/dic_contra.dart';
-import 'package:flutter_savdogar/screens/document/doc_cash.dart';
-import 'package:flutter_savdogar/screens/document/doc_inv.dart';
+import 'package:flutter_savdogar/screens/docs/doc_cash.dart';
 import 'package:flutter_savdogar/screens/reports/reports.dart';
 import 'package:flutter_savdogar/screens/settings/settings.dart';
+
+import '../docs/doc_inv.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -191,7 +192,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   getDocAction2(String text, IconData icon, Function(BuildContext context) func) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         func(context);
       },

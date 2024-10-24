@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_savdogar/model/doc/doc_inv.dart';
-import 'package:flutter_savdogar/screens/document/doc_inv_add.dart';
 import 'package:flutter_savdogar/share/utils.dart';
+
+import 'doc_inv_add.dart';
 
 class DocInvPage extends StatefulWidget {
   const DocInvPage({super.key});
