@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_savdogar/screens/dashboard/dashboard.dart';
 import 'package:flutter_savdogar/screens/dics/dic_contra.dart';
+import 'package:flutter_savdogar/screens/dics/dic_region.dart';
 import 'package:flutter_savdogar/screens/docs/doc_cash.dart';
 import 'package:flutter_savdogar/screens/reports/reports.dart';
 import 'package:flutter_savdogar/screens/settings/settings.dart';
@@ -117,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
                   getDocAction2("Список товаров", Icons.card_travel, (context) => null),
                   const SizedBox(height: 20),
-                  getDocAction2("Регионы", Icons.map_outlined, (context) => null),
+                  getDocAction2("Регионы", Icons.map_outlined, (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicRegionPage()))),
                 ],
               ),
             )

@@ -6,16 +6,16 @@ import 'package:flutter_savdogar/model/dic/dic_contra.dart';
 import 'package:flutter_savdogar/service/http_service.dart';
 import 'package:provider/provider.dart';
 
-class DicContraAddPage extends StatefulWidget {
+class DicContraEditPage extends StatefulWidget {
   final DicContra? dicContra;
 
-  const DicContraAddPage({super.key, this.dicContra});
+  const DicContraEditPage({super.key, this.dicContra});
 
   @override
-  State<DicContraAddPage> createState() => _DicContraAddPageState();
+  State<DicContraEditPage> createState() => _DicContraEditPageState();
 }
 
-class _DicContraAddPageState extends State<DicContraAddPage> {
+class _DicContraEditPageState extends State<DicContraEditPage> {
   TextEditingController name = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController address = TextEditingController();
@@ -129,5 +129,6 @@ class _DicContraAddPageState extends State<DicContraAddPage> {
     });
     var res = await MyHttpService.POST(context, "${settings.serverUrl}/dic_contra/update/${widget.dicContra?.id}", body, settings);
     print("AAAAAAAAAA: $res");
+    settings.saveAndNotify();
   }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_savdogar/core/mysettings.dart';
 import 'package:flutter_savdogar/model/dic/dic_contra.dart';
-import 'package:flutter_savdogar/screens/dics/dic_contra_add.dart';
+import 'package:flutter_savdogar/screens/dics/dic_contra_edit.dart';
 import 'package:flutter_savdogar/service/http_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,7 @@ class _DicContraPageState extends State<DicContraPage> {
 
     if (first) {
       first = false;
-      getAllContra(settings);
+      getAllContra(settings).then((value) => print("OK"));
     }
     return Scaffold(
       appBar: AppBar(
@@ -44,8 +44,9 @@ class _DicContraPageState extends State<DicContraPage> {
               motion: const ScrollMotion(),
               children: [
                 SlidableAction(
-                  onPressed: (context) {
-                    deleteContra(settings, dicContra[index].id);
+                  onPressed: (context) async {
+                    await deleteContra(settings, dicContra[index].id);
+                    await getAllContra(settings);
                   },
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -55,8 +56,9 @@ class _DicContraPageState extends State<DicContraPage> {
               ],
             ),
             child: InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DicContraAddPage(dicContra: dicContra[index])));
+              onTap: () async {
+                await Navigator.push(context, MaterialPageRoute(builder: (context) => DicContraEditPage(dicContra: dicContra[index])));
+                await getAllContra(settings);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,22 +79,23 @@ class _DicContraPageState extends State<DicContraPage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const DicContraAddPage()));
+        onPressed: () async {
+          await Navigator.push(context, MaterialPageRoute(builder: (context) => const DicContraEditPage()));
+          await getAllContra(settings);
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void getAllContra(MySettings settings) async {
+  Future<void> getAllContra(MySettings settings) async {
     var res = await MyHttpService.GET(context, "${settings.serverUrl}/dic_contra/get", settings);
     var data = jsonDecode(res);
     dicContra = (data as List).map((e) => DicContra.fromMapObject(e)).toList();
     setState(() {});
   }
 
-  void deleteContra(MySettings settings, int id) async {
+  Future<void> deleteContra(MySettings settings, int id) async {
     var res = await MyHttpService.DELETE(context, "${settings.serverUrl}/dic_contra/delete/$id", settings);
     print(res);
     setState(() {});
