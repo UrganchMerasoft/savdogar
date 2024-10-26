@@ -23,7 +23,7 @@ class _DicRegionPageState extends State<DicRegionPage> {
 
     if (first) {
       first = false;
-      getRegion(settings).then((value) => print("Ok"));
+      getAllRegion(settings).then((value) => print("Ok"));
     }
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +32,7 @@ class _DicRegionPageState extends State<DicRegionPage> {
           IconButton(
               onPressed: () async {
                 await showRegionDialog(context, settings);
-                await getRegion(settings);
+                await getAllRegion(settings);
               },
               icon: const Icon(Icons.add),
               padding: const EdgeInsets.only(right: 20)),
@@ -50,7 +50,7 @@ class _DicRegionPageState extends State<DicRegionPage> {
                 SlidableAction(
                   onPressed: (context) async {
                     await deleteRegion(settings, dicRegion[index].id);
-                    await getRegion(settings);
+                    await getAllRegion(settings);
                   },
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -64,7 +64,7 @@ class _DicRegionPageState extends State<DicRegionPage> {
               borderRadius: BorderRadius.circular(10),
               onTap: () async {
                 await showRegionDialog(context, settings, dicRegion[index].name, dicRegion[index].id);
-                await getRegion(settings);
+                await getAllRegion(settings);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +82,7 @@ class _DicRegionPageState extends State<DicRegionPage> {
     );
   }
 
-  Future<void> getRegion(MySettings settings) async {
+  Future<void> getAllRegion(MySettings settings) async {
     var res = await MyHttpService.GET(context, "${settings.serverUrl}/dic_region/get", settings);
     print(res);
     var data = jsonDecode(res);

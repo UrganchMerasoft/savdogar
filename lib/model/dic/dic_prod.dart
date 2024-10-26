@@ -5,7 +5,8 @@ class DicProd {
   late int catId;
   late int ordNum;
   late String code;
-  late bool isCur;
+  late String name;
+  late int isCur;
   late double coeff;
   late String unit1;
   late String unit2;
@@ -17,20 +18,21 @@ class DicProd {
   late double price6;
   late double price7;
   late double price8;
-  late bool mustImei;
+  late int mustImei;
   late String myUUID;
   late String prodFormat;
-  late bool isActive;
-  late bool isNew;
-  late DateTime insertedAt;
+  late int isActive;
+  late int isNew;
+  late String insertedAt;
   late double minOstQty;
-  late bool isKg;
+  late int isKg;
 
   DicProd({
     required this.id,
     required this.catId,
     required this.ordNum,
     required this.code,
+    required this.name,
     required this.unit1,
     required this.unit2,
     required this.price1,
@@ -59,6 +61,7 @@ class DicProd {
       catId: json['cat_id'],
       ordNum: json['ord_num'],
       code: json['code'],
+      name: json['name'],
       unit1: json['unit1'],
       unit2: json['unit2'],
       price1: Utils.checkDouble(json['price1']),
@@ -76,7 +79,7 @@ class DicProd {
       prodFormat: json['prod_format'],
       isActive: json['is_active'],
       isNew: json['is_new'],
-      insertedAt: DateTime.parse(json['inserted_at']),
+      insertedAt: json['inserted_at'],
       minOstQty: Utils.checkDouble(json['min_ost_qty']),
       isKg: json['is_kg'],
     );
@@ -87,6 +90,7 @@ class DicProd {
         "cat_id": catId,
         "ord_num": ordNum,
         "code": code,
+        "name": name,
         "unit1": unit1,
         "unit2": unit2,
         "price1": price1,
@@ -104,7 +108,7 @@ class DicProd {
         "prod_format": prodFormat,
         "is_active": isActive,
         "is_new": isNew,
-        "inserted_at": insertedAt.toIso8601String(),
+        "inserted_at": insertedAt,
         "min_ost_qty": minOstQty,
         "is_kg": isKg,
       };
@@ -114,6 +118,7 @@ class DicProd {
     catId = map['cat_id'] ?? 0;
     ordNum = map['ord_num'] ?? 0;
     code = map['code'] ?? "?";
+    name = map['name'] ?? "?";
     unit1 = map['unit1'] ?? "?";
     unit2 = map['unit2'] ?? "?";
     price1 = Utils.checkDouble(map['price1']);
@@ -124,16 +129,16 @@ class DicProd {
     price6 = Utils.checkDouble(map['price6']);
     price7 = Utils.checkDouble(map['price7']);
     price8 = Utils.checkDouble(map['price8']);
-    isCur = map['is_cur'] ?? false;
+    isCur = map['is_cur'] ?? 0;
     coeff = Utils.checkDouble(map['coeff']);
-    mustImei = map['must_imei'] ?? false;
+    mustImei = map['must_imei'] ?? 0;
     myUUID = map['my_uuid'] ?? "?";
     prodFormat = map['prod_format'] ?? "?";
-    isActive = map['is_active'] ?? false;
-    isNew = map['is_new'] ?? false;
-    insertedAt = DateTime.parse(map['inserted_at'] ?? DateTime.now().toIso8601String());
+    isActive = map['is_active'] ?? 0;
+    isNew = map['is_new'] ?? 0;
+    insertedAt = map['inserted_at'] ?? "?";
     minOstQty = Utils.checkDouble(map['min_ost_qty']);
-    isKg = map['is_kg'] ?? false;
+    isKg = map['is_kg'] ?? 0;
   }
 
   Map<String, dynamic> toMap() {
@@ -142,6 +147,7 @@ class DicProd {
     map['cat_id'] = catId;
     map['ord_num'] = ordNum;
     map['code'] = code;
+    map['name'] = name;
     map['unit1'] = unit1;
     map['unit2'] = unit2;
     map['price1'] = price1;
@@ -159,7 +165,7 @@ class DicProd {
     map['prod_format'] = prodFormat;
     map['is_active'] = isActive;
     map['is_new'] = isNew;
-    map['inserted_at'] = insertedAt.toIso8601String();
+    map['inserted_at'] = insertedAt;
     map['min_ost_qty'] = minOstQty;
     map['is_kg'] = isKg;
 
