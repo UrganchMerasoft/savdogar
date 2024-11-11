@@ -1,4 +1,4 @@
-package uz.merasoft.flutter_savdogar
+package com.example.savdogar
 
 import io.flutter.embedding.android.FlutterActivity
 

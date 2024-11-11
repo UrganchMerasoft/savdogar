@@ -4,8 +4,8 @@ import 'package:flutter_savdogar/screens/dics/dic_contra.dart';
 import 'package:flutter_savdogar/screens/dics/dic_prod.dart';
 import 'package:flutter_savdogar/screens/dics/dic_region.dart';
 import 'package:flutter_savdogar/screens/docs/doc_cash.dart';
+import 'package:flutter_savdogar/screens/profile/profile.dart';
 import 'package:flutter_savdogar/screens/reports/reports.dart';
-import 'package:flutter_savdogar/screens/settings/settings.dart';
 
 import '../docs/doc_inv.dart';
 
@@ -25,16 +25,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Savdogar Mobile"),
         actions: [
-          GestureDetector(
-            child: const Row(
-              children: [
-                Icon(Icons.calendar_today, color: Colors.white),
-                SizedBox(width: 10),
-                Text("13.10.2024", style: TextStyle(fontSize: 18, color: Colors.white)),
-                SizedBox(width: 25),
-              ],
-            ),
-          )
+          Visibility(visible: tabIndex == 3, child: IconButton(onPressed: () {}, icon: Icon(Icons.search))),
         ],
       ),
       body: getBodyFromPage(),
@@ -53,7 +44,7 @@ class _HomePageState extends State<HomePage> {
       return const Reports();
     }
     if (tabIndex == 3) {
-      return const Settings();
+      return const ProfilePage();
     }
   }
 
@@ -115,10 +106,11 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
                   getDocAction2("Поставщики", Icons.corporate_fare, (context) => null),
                   const SizedBox(height: 20),
-                  getDocAction2(
-                      "Категория товаров", Icons.dashboard, (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicProdPage()))),
+                  getDocAction2("Категория товаров", Icons.dashboard,
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicProdPage()))),
                   const SizedBox(height: 20),
-                  getDocAction2("Регионы", Icons.map_outlined, (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicRegionPage()))),
+                  getDocAction2("Регионы", Icons.map_outlined,
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicRegionPage()))),
                 ],
               ),
             )
@@ -145,7 +137,7 @@ class _HomePageState extends State<HomePage> {
         BottomNavigationBarItem(icon: Icon(Icons.leaderboard, color: tabIndex == 0 ? Colors.white : Colors.white30), label: "Доска"),
         BottomNavigationBarItem(icon: Icon(Icons.home, color: tabIndex == 1 ? Colors.white : Colors.white30), label: "Главный"),
         BottomNavigationBarItem(icon: Icon(Icons.assignment, color: tabIndex == 2 ? Colors.white : Colors.white30), label: "Отчеты"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings, color: tabIndex == 3 ? Colors.white : Colors.white30), label: "Настройки"),
+        BottomNavigationBarItem(icon: Icon(Icons.person, color: tabIndex == 3 ? Colors.white : Colors.white30), label: "Профиль"),
       ],
     );
   }
@@ -178,9 +170,10 @@ class _HomePageState extends State<HomePage> {
         margin: const EdgeInsets.only(right: 5),
         padding: const EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.outline.withAlpha(25),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade600 : Colors.grey.shade300)),
+          color: Theme.of(context).colorScheme.outline.withAlpha(25),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade600 : Colors.grey.shade300),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -193,7 +186,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   getDocAction2(String text, IconData icon, Function(BuildContext context) func) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         func(context);
       },

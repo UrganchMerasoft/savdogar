@@ -23,6 +23,9 @@ class DocCash {
   late int userId;
   late bool forCashback;
   late double forQty;
+  late int isAccepted;
+  late int isRecovered;
+  late String contraName;
 
   DocCash({
     required this.id,
@@ -49,6 +52,9 @@ class DocCash {
     required this.userId,
     required this.forCashback,
     required this.forQty,
+    required this.isAccepted,
+    required this.isRecovered,
+    required this.contraName,
   });
 
   factory DocCash.fromJson(Map<String, dynamic> json) {
@@ -77,6 +83,9 @@ class DocCash {
       userId: json['user_id'],
       forCashback: json['for_cashback'] == 1,
       forQty: json['for_qty'],
+      isAccepted: json['is_accepted'],
+      isRecovered: json['is_recovered'],
+      contraName: json['contra_name'],
     );
   }
 
@@ -106,34 +115,40 @@ class DocCash {
       'user_id': userId,
       'for_cashback': forCashback ? 1 : 0,
       'for_qty': forQty,
+      'is_accepted': isAccepted,
+      'is_recovered': isRecovered,
+      'contra_name': contraName,
     };
   }
 
   DocCash.fromMapObject(Map<String, dynamic> map) {
     id = map['id'] ?? 0;
-    typeId = map['type_id']??0;
-    payType = map['pay_type']??0;
-    annul = map['annul'];
-    whId = map['wh_id'];
-    curdate = map['curdate'];
-    curtime = map['curtime'];
-    contraId = map['contra_id'];
-    isCur = map['is_cur'];
-    invertCur = map['invert_cur'];
-    summ = map['summ'];
-    summPla = map['summ_pla'];
-    summCur = map['summ_cur'];
-    summRet = map['summ_ret'];
-    summReal = map['summ_real'];
-    curRate = map['cur_rate'];
-    notes = map['notes'];
-    zatratId = map['zatrat_id'];
-    zatratName = map['zatrat_name'];
-    byInvId = map['by_inv_id'];
-    myUuid = map['my_uuid'];
-    userId = map['user_id'];
-    forCashback = map['for_cashback'] == 1;
-    forQty = map['for_qty'];
+    typeId = map['type_id'] ?? 0;
+    payType = map['pay_type'] ?? 0;
+    annul = map['annul'] ?? 0;
+    whId = map['wh_id'] ?? 0;
+    curdate = map['curdate'] ?? "";
+    curtime = map['curtime'] ?? "";
+    contraId = map['contra_id'] ?? 0;
+    isCur = map['is_cur'] ?? 0;
+    invertCur = map['invert_cur'] ?? 0;
+    summ = map['summ'] ?? 0;
+    summPla = map['summ_pla'] ?? 0;
+    summCur = map['summ_cur'] ?? 0;
+    summRet = map['summ_ret'] ?? 0;
+    summReal = map['summ_real'] ?? 0;
+    curRate = map['cur_rate'] ?? 0;
+    notes = map['notes'] ?? "";
+    zatratId = map['zatrat_id'] ?? 0;
+    zatratName = map['zatrat_name'] ?? "";
+    byInvId = map['by_inv_id'] ?? 0;
+    myUuid = map['my_uuid'] ?? "?";
+    userId = map['user_id'] ?? 0;
+    forCashback = map['for_cashback'] ?? 0;
+    forQty = map['for_qty'] ?? 0;
+    isAccepted = map['is_accepted'] ?? 0;
+    isRecovered = map['is_recovered'] ?? 0;
+    contraName = map['contra_name'] ?? "?";
   }
 
   Map<String, dynamic> toMap() {
@@ -162,6 +177,9 @@ class DocCash {
       'user_id': userId,
       'for_cashback': forCashback,
       'for_qty': forQty,
+      'is_accepted': isAccepted,
+      'is_recovered': isRecovered,
+      'contra_name': contraName,
     };
   }
 }

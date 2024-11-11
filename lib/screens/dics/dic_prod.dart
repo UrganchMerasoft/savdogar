@@ -22,6 +22,7 @@ class _DicProdPageState extends State<DicProdPage> {
   List<DicProd> filteredProd = [];
   bool first = true;
   int tab = 0;
+  int catId = 0;
   String catName = '';
   int editType = 1;
 
@@ -42,14 +43,18 @@ class _DicProdPageState extends State<DicProdPage> {
             Visibility(
               visible: tab == 1,
               child: IconButton(
-                onPressed: () => editInfoType(context, settings),
+                onPressed: () => changeInfoType(context, settings),
                 icon: const Icon(Icons.published_with_changes_rounded),
               ),
             ),
             Visibility(
               visible: tab == 1,
               child: IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicProdEditPage())),
+                onPressed: () async {
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => DicProdEditPage(dicCat: dicCat)));
+                  await getAllProduct(settings);
+                  refreshFilteredProd();
+                },
                 icon: const Icon(Icons.add),
               ),
             ),
@@ -107,12 +112,13 @@ class _DicProdPageState extends State<DicProdPage> {
             onLongPress: () async {
               await showEditDialog(settings, dicCat[index]);
               await getAllCategory(settings);
+              setState(() {});
             },
             onTap: () {
-              filteredProd = dicProd.where((element) => element.catId == dicCat[index].id).toList();
               tab = 1;
+              catId = dicCat[index].id;
               catName = dicCat[index].name;
-              setState(() {});
+              refreshFilteredProd();
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,40 +162,69 @@ class _DicProdPageState extends State<DicProdPage> {
           child: ListView.builder(
             itemCount: filteredProd.length,
             itemBuilder: (context, index) {
-              return Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
-                  color: index.isEven ? Colors.grey.shade50 : Colors.white,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return Slidable(
+                key: ValueKey(filteredProd[index].id),
+                endActionPane: ActionPane(
+                  motion: const ScrollMotion(),
                   children: [
-                    const Image(image: AssetImage("assets/images/default.png"), width: 60, fit: BoxFit.contain),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(filteredProd[index].name, style: Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 15)),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Text("${filteredProd[index].coeff.toInt()} ${filteredProd[index].unit1}", style: Theme.of(context).textTheme.bodyLarge),
-                              const SizedBox(width: 80),
-                              Text(filteredProd[index].price1.toString(), style: Theme.of(context).textTheme.bodyLarge),
-                              const Spacer(),
-                              Text(getEditType(filteredProd[index]),
-                                  style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w900, fontSize: 16)),
-                              const SizedBox(width: 10)
-                            ],
-                          )
-                        ],
-                      ),
+                    SlidableAction(
+                      onPressed: (context) async {
+                        await deleteProd(settings, filteredProd[index].id);
+                        await getAllProduct(settings);
+                        refreshFilteredProd();
+                      },
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      icon: Icons.delete,
+                      label: 'Delete',
+                      autoClose: true,
                     ),
                   ],
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DicProdEditPage(dicProd: filteredProd[index], dicCat: dicCat)),
+                    );
+                    await getAllProduct(settings);
+                    refreshFilteredProd();
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Colors.grey.shade300)), color: index.isEven ? Colors.grey.shade50 : Colors.white),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Image(image: AssetImage("assets/images/default.png"), width: 60, fit: BoxFit.contain),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(filteredProd[index].name, style: Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 15)),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Text("${filteredProd[index].coeff.toInt()} ${filteredProd[index].unit1}",
+                                      style: Theme.of(context).textTheme.bodyLarge),
+                                  const SizedBox(width: 80),
+                                  Text(filteredProd[index].price1.toString(), style: Theme.of(context).textTheme.bodyLarge),
+                                  const Spacer(),
+                                  Text(getEditType(filteredProd[index]),
+                                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w900, fontSize: 16)),
+                                  const SizedBox(width: 10)
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               );
             },
@@ -199,7 +234,7 @@ class _DicProdPageState extends State<DicProdPage> {
     );
   }
 
-  editInfoType(BuildContext context, MySettings settings) {
+  changeInfoType(BuildContext context, MySettings settings) {
     return showDialog(
       context: context,
       builder: (context) {
@@ -241,7 +276,9 @@ class _DicProdPageState extends State<DicProdPage> {
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red, fixedSize: const Size(100, 45), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                            backgroundColor: Colors.red,
+                            fixedSize: const Size(100, 45),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                         child: const Text('Cancel', style: TextStyle(color: Colors.white)),
                       ),
                       const Spacer(),
@@ -251,7 +288,9 @@ class _DicProdPageState extends State<DicProdPage> {
                           settings.saveAndNotify();
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue, fixedSize: const Size(100, 45), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                            backgroundColor: Colors.blue,
+                            fixedSize: const Size(100, 45),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                         child: const Text('OK', style: TextStyle(color: Colors.white)),
                       ),
                     ],
@@ -324,8 +363,10 @@ class _DicProdPageState extends State<DicProdPage> {
                         filled: true,
                         fillColor: Colors.grey[100],
                         contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 1, color: Colors.grey[400]!)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(width: 1.5, color: Colors.blue)),
+                        enabledBorder:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 1, color: Colors.grey[400]!)),
+                        focusedBorder:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(width: 1.5, color: Colors.blue)),
                       ),
                     ),
                   ),
@@ -340,8 +381,10 @@ class _DicProdPageState extends State<DicProdPage> {
                         filled: true,
                         fillColor: Colors.grey[100],
                         contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 1, color: Colors.grey[400]!)),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(width: 1.5, color: Colors.blue)),
+                        enabledBorder:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(width: 1, color: Colors.grey[400]!)),
+                        focusedBorder:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(width: 1.5, color: Colors.blue)),
                       ),
                     ),
                   ),
@@ -371,7 +414,7 @@ class _DicProdPageState extends State<DicProdPage> {
                         if (cat != null) {
                           await editCat(settings, ordNum.text, nameCat.text.trim(), cat);
                         } else {
-                          await addCat(settings, nameCat.text.trim(), int.parse(ordNum.text));
+                          await addCat(settings, nameCat.text.trim(), ordNum);
                         }
                         Navigator.pop(context);
                       },
@@ -402,7 +445,7 @@ class _DicProdPageState extends State<DicProdPage> {
     settings.saveAndNotify();
   }
 
-  void getAllProduct(MySettings settings) async {
+  Future<void> getAllProduct(MySettings settings) async {
     var res = await MyHttpService.GET(context, "${settings.serverUrl}/dic_prod/get", settings);
     // print(res);
     var data = jsonDecode(res);
@@ -420,9 +463,9 @@ class _DicProdPageState extends State<DicProdPage> {
     settings.saveAndNotify();
   }
 
-  Future<void> addCat(MySettings settings, String name, int ordNum) async {
+  Future<void> addCat(MySettings settings, String name, TextEditingController ordNum) async {
     String body = jsonEncode({
-      "ord_num": ordNum,
+      "ord_num": ordNum.text,
       "name": name,
     });
     var res = await MyHttpService.POST(context, "${settings.serverUrl}/dic_cat/add", body, settings);
@@ -434,5 +477,16 @@ class _DicProdPageState extends State<DicProdPage> {
     var res = await MyHttpService.DELETE(context, "${settings.serverUrl}/dic_cat/delete/$id", settings);
     print(res);
     settings.saveAndNotify();
+  }
+
+  Future<void> deleteProd(MySettings settings, int id) async {
+    var res = await MyHttpService.DELETE(context, "${settings.serverUrl}/dic_prod/delete/$id", settings);
+    print(res);
+    settings.saveAndNotify();
+  }
+
+  void refreshFilteredProd() {
+    filteredProd = dicProd.where((element) => element.catId == catId).toList();
+    setState(() {});
   }
 }

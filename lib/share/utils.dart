@@ -5,8 +5,13 @@ import 'package:uuid/uuid.dart';
 class Utils {
   static final Utils _singleton = Utils._internal();
 
-  static Map<String, String> httpSimpleJsonHeader(String token, DateTime date, String db) =>
-      {"Content-Type": "application/json; charset=utf-8", "Authorization": token, "db": db, "date": date.millisecondsSinceEpoch.toString(), "charset": "utf-8"};
+  static Map<String, String> httpSimpleJsonHeader(String token, DateTime date, String db) => {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": token,
+        "db": db,
+        "date": date.millisecondsSinceEpoch.toString(),
+        "charset": "utf-8"
+      };
 
   static DateFormat formatYYYYMMdd = DateFormat('yyyy-MM-dd');
   static DateFormat formatYYYYMMddhhmm = DateFormat('yyyy-MM-dd HH:mm');
@@ -31,6 +36,11 @@ class Utils {
 
   static String myDateFormatFromStr(DateFormat f, String val) {
     return f.format(DateTime.fromMillisecondsSinceEpoch(int.parse(val) * 1000, isUtc: false));
+  }
+
+  static String myDateFormatFromStr1(DateFormat f, String val) {
+    DateTime time = DateTime.parse(val);
+    return f.format(time);
   }
 
   static String formatPhone(String phone) {
