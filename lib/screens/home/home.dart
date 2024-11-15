@@ -3,11 +3,11 @@ import 'package:flutter_savdogar/screens/dashboard/dashboard.dart';
 import 'package:flutter_savdogar/screens/dics/dic_contra.dart';
 import 'package:flutter_savdogar/screens/dics/dic_prod.dart';
 import 'package:flutter_savdogar/screens/dics/dic_region.dart';
-import 'package:flutter_savdogar/screens/docs/doc_cash.dart';
+import 'package:flutter_savdogar/screens/docs/cash/doc_cash.dart';
 import 'package:flutter_savdogar/screens/profile/profile.dart';
 import 'package:flutter_savdogar/screens/reports/reports.dart';
 
-import '../docs/doc_inv.dart';
+import '../docs/inv/doc_inv.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            getDocType("Кассовые дакументы", (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DocCashPage()))),
+            getDocType("Кассовые дoкументы", (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DocCashPage()))),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(text, style: Theme.of(context).textTheme.bodyMedium),
+            Text(text, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16)),
             const Icon(Icons.chevron_right),
           ],
         ),
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(text, style: Theme.of(context).textTheme.bodyMedium),
+            Text(text, style: Theme.of(context).textTheme.bodyLarge),
             Icon(Icons.add, color: color, size: 22),
           ],
         ),
@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Icon(icon, color: Colors.grey.shade700),
           const SizedBox(width: 10),
-          Text(text, style: Theme.of(context).textTheme.bodyMedium),
+          Text(text, style: Theme.of(context).textTheme.bodyLarge),
           const Spacer(),
           Icon(Icons.chevron_right, color: Colors.grey.shade600),
         ],

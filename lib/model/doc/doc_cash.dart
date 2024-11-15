@@ -1,3 +1,5 @@
+import 'package:flutter_savdogar/share/utils.dart';
+
 class DocCash {
   late int id;
   late int typeId;
@@ -21,8 +23,8 @@ class DocCash {
   late int byInvId;
   late String myUuid;
   late int userId;
-  late bool forCashback;
-  late double forQty;
+  late int forCashback;
+  late int forQty;
   late int isAccepted;
   late int isRecovered;
   late String contraName;
@@ -81,7 +83,7 @@ class DocCash {
       byInvId: json['by_inv_id'],
       myUuid: json['my_uuid'],
       userId: json['user_id'],
-      forCashback: json['for_cashback'] == 1,
+      forCashback: json['for_cashback'],
       forQty: json['for_qty'],
       isAccepted: json['is_accepted'],
       isRecovered: json['is_recovered'],
@@ -113,7 +115,7 @@ class DocCash {
       'by_inv_id': byInvId,
       'my_uuid': myUuid,
       'user_id': userId,
-      'for_cashback': forCashback ? 1 : 0,
+      'for_cashback': forCashback,
       'for_qty': forQty,
       'is_accepted': isAccepted,
       'is_recovered': isRecovered,
@@ -132,12 +134,12 @@ class DocCash {
     contraId = map['contra_id'] ?? 0;
     isCur = map['is_cur'] ?? 0;
     invertCur = map['invert_cur'] ?? 0;
-    summ = map['summ'] ?? 0;
-    summPla = map['summ_pla'] ?? 0;
-    summCur = map['summ_cur'] ?? 0;
-    summRet = map['summ_ret'] ?? 0;
-    summReal = map['summ_real'] ?? 0;
-    curRate = map['cur_rate'] ?? 0;
+    summ = Utils.checkDouble(map['summ']);
+    summPla = Utils.checkDouble(map['summ_pla']);
+    summCur = Utils.checkDouble(map['summ_cur']);
+    summRet = Utils.checkDouble(map['summ_ret']);
+    summReal = Utils.checkDouble(map['summ_real']);
+    curRate = Utils.checkDouble(map['cur_rate']);
     notes = map['notes'] ?? "";
     zatratId = map['zatrat_id'] ?? 0;
     zatratName = map['zatrat_name'] ?? "";
