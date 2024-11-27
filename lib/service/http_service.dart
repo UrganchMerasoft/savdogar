@@ -22,6 +22,24 @@ class MyHttpService {
     return _handleResponse(context, res);
   }
 
+  static Future<String> GET1(BuildContext context, String url, String body, MySettings settings) async {
+    Response? res;
+    try {
+      res = await post(
+        Uri.parse(url),
+        body: body,
+        headers: Utils.httpSimpleHeader(),
+      );
+    } catch (e) {
+      _showToast(context, "Xato", "Server bilan aloqa yo'q: $e", ToastificationType.error);
+      return "";
+    }
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      return res.body;
+    }
+    return _handleResponse(context, res);
+  }
+
   static Future<String> POST(BuildContext context, String url, String body, MySettings settings) async {
     Response? res;
     try {
@@ -36,6 +54,7 @@ class MyHttpService {
     }
 
     return _handleResponse(context, res);
+    return res.body;
   }
 
   static Future<String> DELETE(BuildContext context, String url, MySettings settings) async {

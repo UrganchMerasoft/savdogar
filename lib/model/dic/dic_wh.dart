@@ -18,10 +18,10 @@ class DicWh {
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "my_uuid": myUUID,
-  };
+        "id": id,
+        "name": name,
+        "my_uuid": myUUID,
+      };
 
   DicWh.fromMapObject(Map<String, dynamic> map) {
     id = map['id'] ?? 0;

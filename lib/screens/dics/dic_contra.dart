@@ -89,7 +89,7 @@ class _DicContraPageState extends State<DicContraPage> {
   }
 
   Future<void> getAllContra(MySettings settings) async {
-    var res = await MyHttpService.GET(context, "${settings.serverUrl}/dic_contra/get", settings);
+    var res = await MyHttpService.GET(context, "${settings.serverUrl}/dic_contra/get/99", settings);
     var data = jsonDecode(res);
     dicContra = (data as List).map((e) => DicContra.fromMapObject(e)).toList();
     setState(() {});
@@ -98,6 +98,6 @@ class _DicContraPageState extends State<DicContraPage> {
   Future<void> deleteContra(MySettings settings, int id) async {
     var res = await MyHttpService.DELETE(context, "${settings.serverUrl}/dic_contra/delete/$id", settings);
     print(res);
-    setState(() {});
+    settings.saveAndNotify();
   }
 }

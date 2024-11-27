@@ -16,6 +16,7 @@ class DocCash {
   late double summRet;
   late double summCur;
   late double summReal;
+  late double summClick;
   late double curRate;
   late String notes;
   late int zatratId;
@@ -28,6 +29,7 @@ class DocCash {
   late int isAccepted;
   late int isRecovered;
   late String contraName;
+  late String whName;
 
   DocCash({
     required this.id,
@@ -45,6 +47,7 @@ class DocCash {
     required this.summCur,
     required this.summRet,
     required this.summReal,
+    required this.summClick,
     required this.curRate,
     required this.notes,
     required this.zatratId,
@@ -57,6 +60,7 @@ class DocCash {
     required this.isAccepted,
     required this.isRecovered,
     required this.contraName,
+    required this.whName,
   });
 
   factory DocCash.fromJson(Map<String, dynamic> json) {
@@ -76,6 +80,7 @@ class DocCash {
       summCur: json['summ_cur'],
       summRet: json['summ_ret'],
       summReal: json['summ_real'],
+      summClick: json['summ_click'],
       curRate: json['cur_rate'],
       notes: json['notes'],
       zatratId: json['zatrat_id'],
@@ -88,6 +93,7 @@ class DocCash {
       isAccepted: json['is_accepted'],
       isRecovered: json['is_recovered'],
       contraName: json['contra_name'],
+      whName: json['wh_name'],
     );
   }
 
@@ -108,6 +114,7 @@ class DocCash {
       'summ_cur': summCur,
       'summ_ret': summRet,
       'summ_real': summReal,
+      'summ_click': summClick,
       'cur_rate': curRate,
       'notes': notes,
       'zatrat_id': zatratId,
@@ -120,6 +127,7 @@ class DocCash {
       'is_accepted': isAccepted,
       'is_recovered': isRecovered,
       'contra_name': contraName,
+      'wh_name': whName,
     };
   }
 
@@ -139,6 +147,7 @@ class DocCash {
     summCur = Utils.checkDouble(map['summ_cur']);
     summRet = Utils.checkDouble(map['summ_ret']);
     summReal = Utils.checkDouble(map['summ_real']);
+    summClick = Utils.checkDouble(map['summ_click']);
     curRate = Utils.checkDouble(map['cur_rate']);
     notes = map['notes'] ?? "";
     zatratId = map['zatrat_id'] ?? 0;
@@ -151,6 +160,7 @@ class DocCash {
     isAccepted = map['is_accepted'] ?? 0;
     isRecovered = map['is_recovered'] ?? 0;
     contraName = map['contra_name'] ?? "?";
+    whName = map['wh_name'] ?? "?";
   }
 
   Map<String, dynamic> toMap() {
@@ -170,6 +180,7 @@ class DocCash {
       'summ_cur': summCur,
       'summ_ret': summRet,
       'summ_real': summReal,
+      'summ_click': summClick,
       'cur_rate': curRate,
       'notes': notes,
       'zatrat_id': zatratId,
@@ -182,6 +193,7 @@ class DocCash {
       'is_accepted': isAccepted,
       'is_recovered': isRecovered,
       'contra_name': contraName,
+      'wh_name': whName,
     };
   }
 }
