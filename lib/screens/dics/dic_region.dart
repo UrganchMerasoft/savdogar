@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_savdogar/core/mysettings.dart';
 import 'package:flutter_savdogar/model/dic/dic_region.dart';
 import 'package:flutter_savdogar/service/http_service.dart';
@@ -14,8 +15,33 @@ class DicRegionPage extends StatefulWidget {
 }
 
 class _DicRegionPageState extends State<DicRegionPage> {
+  final ScrollController _scrollController = ScrollController();
+  bool _isFabVisible = true;
+
   List<DicRegion> dicRegion = [];
   bool first = true;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    _scrollController.addListener(_onScroll);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      if (_isFabVisible) setState(() => _isFabVisible = false);
+    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      if (!_isFabVisible) setState(() => _isFabVisible = true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,28 +49,18 @@ class _DicRegionPageState extends State<DicRegionPage> {
 
     if (first) {
       first = false;
-      getAllRegion(settings).then((value) => print("Ok"));
+      getAllRegion(settings).then((value) => debugPrint("Ok"));
     }
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Регионы"),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                await showRegionDialog(context, settings);
-                await getAllRegion(settings);
-              },
-              icon: const Icon(Icons.add),
-              padding: const EdgeInsets.only(right: 20)),
-        ],
-      ),
+      appBar: AppBar(title: const Text("Регионы")),
       body: ListView.builder(
-        padding: const EdgeInsets.only(left: 15, right: 15),
+        controller: _scrollController,
         itemCount: dicRegion.length,
         itemBuilder: (context, index) {
           return Slidable(
             key: ValueKey(dicRegion[index].id),
             endActionPane: ActionPane(
+              extentRatio: 0.25,
               motion: const ScrollMotion(),
               children: [
                 SlidableAction(
@@ -70,7 +86,10 @@ class _DicRegionPageState extends State<DicRegionPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 15),
-                  Text(dicRegion[index].name, style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w400)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Text(dicRegion[index].name, style: Theme.of(context).textTheme.bodyLarge),
+                  ),
                   const SizedBox(height: 15),
                   const Divider(thickness: 1, height: 1),
                 ],
@@ -79,34 +98,44 @@ class _DicRegionPageState extends State<DicRegionPage> {
           );
         },
       ),
+      floatingActionButton: _isFabVisible
+          ? FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              onPressed: () async {
+                await showRegionDialog(context, settings);
+                await getAllRegion(settings);
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
   Future<void> getAllRegion(MySettings settings) async {
     var res = await MyHttpService.GET(context, "${settings.serverUrl}/dic_region/get", settings);
-    print(res);
     var data = jsonDecode(res);
     dicRegion = (data as List).map((e) => DicRegion.fromMapObject(e)).toList();
     setState(() {});
+    debugPrint(res);
   }
 
   Future<void> editRegion(MySettings settings, int id, String name) async {
     String body = jsonEncode({"name": name});
     var res = await MyHttpService.POST(context, "${settings.serverUrl}/dic_region/update/$id", body, settings);
-    print(res);
+    debugPrint(res);
     settings.saveAndNotify();
   }
 
   Future<void> addRegion(MySettings settings, String name) async {
     String body = jsonEncode({"name": name});
     var res = await MyHttpService.POST(context, "${settings.serverUrl}/dic_region/add", body, settings);
-    print(res);
+    debugPrint(res);
     settings.saveAndNotify();
   }
 
   Future<void> deleteRegion(MySettings settings, int id) async {
     var res = await MyHttpService.DELETE(context, "${settings.serverUrl}/dic_region/delete/$id", settings);
-    print(res);
+    debugPrint(res);
     settings.saveAndNotify();
   }
 
@@ -120,17 +149,32 @@ class _DicRegionPageState extends State<DicRegionPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(regionName != null ? 'Регион изменить' : 'Регион добавить'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Регионы',
-                  border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(10))),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Регионы',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade400)),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.shade400)),
+                    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.blue)),
+                    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: Colors.red)),
+                    errorStyle: const TextStyle(fontSize: 12, height: 0.5),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Region nomini kiriting!";
+                    }
+                    return null;
+                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -142,12 +186,10 @@ class _DicRegionPageState extends State<DicRegionPage> {
             TextButton(
               child: const Text('OK'),
               onPressed: () async {
-                if (regionName == null) {
-                  await addRegion(settings, nameController.text);
-                } else {
-                  await editRegion(settings, id!, nameController.text);
+                if (_formKey.currentState?.validate() ?? false) {
+                  regionName == null ? await addRegion(settings, nameController.text) : await editRegion(settings, id!, nameController.text);
+                  Navigator.pop(context);
                 }
-                Navigator.pop(context);
               },
             ),
           ],

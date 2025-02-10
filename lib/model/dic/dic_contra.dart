@@ -14,6 +14,9 @@ class DicContra {
   late String contractNum;
   late String inn;
   late String telegramChatId;
+  late int userId;
+  late String birthDate;
+  late String regionName;
 
   DicContra({
     required this.id,
@@ -31,6 +34,9 @@ class DicContra {
     required this.contractNum,
     required this.inn,
     required this.telegramChatId,
+    required this.userId,
+    required this.birthDate,
+    required this.regionName,
   });
 
   factory DicContra.fromJson(Map<String, dynamic> json) {
@@ -50,6 +56,9 @@ class DicContra {
       contractNum: json['contract_num'],
       inn: json['inn'],
       telegramChatId: json['telegram_chat_id'],
+      userId: json['user_id'],
+      birthDate: json['birth_date'],
+      regionName: json['region_name'],
     );
   }
 
@@ -69,6 +78,9 @@ class DicContra {
         "contract_num": contractNum,
         "inn": inn,
         "telegram_chat_id": telegramChatId,
+        "user_id": userId,
+        "birth_date": birthDate,
+        "region_name": regionName,
       };
 
   DicContra.fromMapObject(Map<String, dynamic> map) {
@@ -87,6 +99,9 @@ class DicContra {
     contractNum = map['contract_num'] ?? "";
     inn = map['inn'] ?? "";
     telegramChatId = map['telegram_chat_id'] ?? "";
+    userId = map['user_id'] ?? 0;
+    birthDate = map['birth_date'] ?? "";
+    regionName = map['region_name'] ?? "?";
   }
 
   Map<String, dynamic> toMap() {
@@ -106,6 +121,9 @@ class DicContra {
     map['contract_num'] = contractNum;
     map['inn'] = inn;
     map['telegram_chat_id'] = telegramChatId;
+    map['user_id'] = userId;
+    map['birth_date'] = birthDate;
+    map['region_name'] = regionName;
 
     return map;
   }

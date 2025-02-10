@@ -13,8 +13,19 @@ class MySettings with ChangeNotifier {
   String userPsw = "";
   String userName = "";
   String avatarUrl = "";
-  double defLat = 0.0;
-  double defLng = 0.0;
+
+  int curRate = 0;
+
+  //Sprovochnik filter uchun fieldlar
+  String contraFilter = "";
+
+  // Kassa document uchun fieldlar
+  String selectedDocCash = "";
+  String statusDocCash = "";
+
+  // Document sklady uchun fieldlar
+  String selectedDocInv = "";
+  String statusDocInv = "";
 
   late Locale locale = const Locale("ru", "RU");
 
@@ -35,8 +46,14 @@ class MySettings with ChangeNotifier {
     timeOut = prefs.getInt("timeOut") ?? 0;
     newButtonHider = prefs.getInt("newButtonHider") ?? 0;
 
-    defLat = prefs.getDouble("defLat") ?? 0;
-    defLng = prefs.getDouble("defLng") ?? 0;
+    curRate = prefs.getInt("curRate") ?? 0;
+
+    selectedDocCash = prefs.getString("selectedDocCash") ?? "";
+    statusDocCash = prefs.getString("statusDocCash") ?? "";
+
+    selectedDocInv = prefs.getString("selectedDocInv") ?? "";
+    statusDocInv = prefs.getString("statusDocInv") ?? "";
+    contraFilter = prefs.getString("contraFilter") ?? "";
   }
 
   Future<void> saveAndNotify() async {
@@ -53,8 +70,15 @@ class MySettings with ChangeNotifier {
     await prefs.setInt("timeOut", timeOut);
     await prefs.setInt("newButtonHider", newButtonHider);
 
-    await prefs.setDouble("defLng", defLng);
-    await prefs.setDouble("defLat", defLat);
+    await prefs.setInt("curRate", curRate);
+
+    await prefs.setString("selectedDocCash", selectedDocCash);
+    await prefs.setString("statusDocCash", statusDocCash);
+
+    await prefs.setString("selectedDocInv", selectedDocInv);
+    await prefs.setString("statusDocInv", statusDocInv);
+
+    await prefs.setString("contraFilter", contraFilter);
   }
 
   void logout() {

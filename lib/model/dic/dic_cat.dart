@@ -3,12 +3,14 @@ class DicCat {
   late int ordNum;
   late String name;
   late String myUUID;
+  late int prodCount;
 
   DicCat({
     required this.id,
     required this.ordNum,
     required this.name,
     required this.myUUID,
+    required this.prodCount,
   });
 
   factory DicCat.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class DicCat {
       ordNum: json['ord_num'],
       name: json['name'],
       myUUID: json['my_uuid'],
+      prodCount: json['prod_count'],
     );
   }
 
@@ -25,6 +28,7 @@ class DicCat {
         "ord_num": ordNum,
         "name": name,
         "my_uuid": myUUID,
+        "prod_count": prodCount,
       };
 
   DicCat.fromMapObject(Map<String, dynamic> map) {
@@ -32,6 +36,7 @@ class DicCat {
     ordNum = map['ord_num'] ?? 0;
     name = map['name'] ?? "?";
     myUUID = map['my_uuid'] ?? "";
+    prodCount = map['prod_count'] ?? "";
   }
 
   Map<String, dynamic> toMap() {
@@ -40,6 +45,7 @@ class DicCat {
     map['ord_num'] = ordNum;
     map['name'] = name;
     map['my_uuid'] = myUUID;
+    map['prod_count'] = prodCount;
 
     return map;
   }

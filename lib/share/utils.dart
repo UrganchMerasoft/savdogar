@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -43,6 +45,15 @@ class Utils {
     return f.format(time);
   }
 
+  static String convertDateToIso(String date) {
+    List<String> parts = date.split('.');
+    String day = parts[0];
+    String month = parts[1];
+    String year = parts[2];
+
+    return '$year-$month-$day';
+  }
+
   static String formatPhone(String phone) {
     if (phone.length == 9) {
       return "${phone.substring(0, 2)} ${phone.substring(2, 5)} ${phone.substring(5)}";
@@ -62,9 +73,9 @@ class Utils {
       return "0";
     }
     if ((d - d.roundToDouble()).abs() < 0.01) {
-      return Utils.numFormatCurrent.format(d).replaceAll(",", "").replaceAll(".", ",");
+      return Utils.numFormatCurrent.format(d).replaceAll(",", " ").replaceAll(".", ",");
     } else {
-      return Utils.numFormat0_00.format(d).replaceAll(",", "").replaceAll(".", ",");
+      return Utils.numFormat0_00.format(d).replaceAll(",", " ").replaceAll(".", ",");
     }
   }
 
@@ -163,4 +174,114 @@ class Utils {
         "Content-Type": "application/json; charset=utf-8",
         "charset": "utf-8",
       };
+
+  static Future<DateTime?> myDatePicker(BuildContext context, DateTime date) async {
+    DateTime? selectedDate = await showDatePicker(
+      initialDate: date,
+      context: context,
+      firstDate: DateTime(1990, 01, 01),
+      lastDate: DateTime(2100, 01, 01),
+      helpText: 'Sanani tanlang',
+      cancelText: 'Bekor qilish',
+      confirmText: 'Tanlash',
+      fieldLabelText: 'Sanani kiriting',
+    );
+    return selectedDate;
+  }
+
+  static double parseFormattedCurrency(String formattedValue) {
+    String cleanedValue = formattedValue.replaceAll(RegExp(r'[^0-9]'), '');
+    return double.tryParse(cleanedValue) ?? 0.0;
+  }
+}
+
+class DateTextFormatter1 extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.length > oldValue.text.length && newValue.text.isNotEmpty && oldValue.text.isNotEmpty) {
+      if (RegExp('[^0-9/]').hasMatch(newValue.text)) return oldValue;
+      if (newValue.text.length > 10) return oldValue;
+      if (newValue.text.length == 2 || newValue.text.length == 5) {
+        return TextEditingValue(
+          text: '${newValue.text}/',
+          selection: TextSelection.collapsed(
+            offset: newValue.selection.end + 1,
+          ),
+        );
+      } else if (newValue.text.length == 3 && newValue.text[2] != '/') {
+        return TextEditingValue(
+          text: '${newValue.text.substring(0, 2)}/${newValue.text.substring(2)}',
+          selection: TextSelection.collapsed(
+            offset: newValue.selection.end + 1,
+          ),
+        );
+      } else if (newValue.text.length == 6 && newValue.text[5] != '/') {
+        return TextEditingValue(
+          text: '${newValue.text.substring(0, 5)}/${newValue.text.substring(5)}',
+          selection: TextSelection.collapsed(
+            offset: newValue.selection.end + 1,
+          ),
+        );
+      }
+    } else if (newValue.text.length == 1 && oldValue.text.isEmpty && RegExp('[^0-9]').hasMatch(newValue.text)) {
+      return oldValue;
+    }
+    return newValue;
+  }
+}
+
+class DateTextFormatter extends TextInputFormatter {
+  static const _maxChars = 8;
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = _format(newValue.text, '.');
+    return newValue.copyWith(text: text, selection: updateCursorPosition(text));
+  }
+
+  String _format(String value, String seperator) {
+    value = value.replaceAll(seperator, '');
+    var newString = '';
+
+    for (int i = 0; i < min(value.length, _maxChars); i++) {
+      newString += value[i];
+      if ((i == 1 || i == 3) && i != value.length - 1) {
+        newString += seperator;
+      }
+    }
+
+    return newString;
+  }
+
+  TextSelection updateCursorPosition(String text) {
+    return TextSelection.fromPosition(TextPosition(offset: text.length));
+  }
+}
+
+class CurrencyInputFormatter extends TextInputFormatter {
+  CurrencyInputFormatter({this.maxDigits = 20});
+
+  final int maxDigits;
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+    if (newValue.selection.baseOffset > maxDigits) {
+      return oldValue;
+    }
+
+    String newValueText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (newValueText.isEmpty) {
+      return newValue.copyWith(text: '', selection: TextSelection.collapsed(offset: 0));
+    }
+
+    double value = double.parse(newValueText);
+
+    final formatter = NumberFormat.decimalPattern('uz');
+    String newText = formatter.format(value);
+    return newValue.copyWith(text: newText, selection: TextSelection.collapsed(offset: newText.length));
+  }
 }

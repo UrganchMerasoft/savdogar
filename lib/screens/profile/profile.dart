@@ -21,56 +21,69 @@ class _ProfilePageState extends State<ProfilePage> {
             Text("Husanboy Allayorov", style: Theme.of(context).textTheme.titleLarge),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  shadowColor: Colors.black.withOpacity(0.5),
-                  elevation: 5,
-                  child: Column(
-                    children: [
-                      buildInkWellButton(
-                        Icons.password_outlined,
-                        "Change Password",
-                        "Change Password",
-                        () => (),
-                        Colors.orange,
-                        BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                      ),
-                      buildDivider(),
-                      buildInkWellButton(
-                        Icons.settings,
-                        "Settings",
-                        "Settings",
-                        () => Navigator.push(context, MaterialPageRoute(builder: (context) => Settings())),
-                        Colors.indigo,
-                        BorderRadius.zero,
-                      ),
-                      buildDivider(),
-                      buildInkWellButton(
-                        Icons.laptop,
-                        "Sessions",
-                        "Sessions",
-                        () => (),
-                        Colors.blue,
-                        BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                      ),
-                      buildDivider(),
-                      buildInkWellButton(
-                        Icons.subscriptions_outlined,
-                        "Subscriptions (balance)",
-                        "Subscriptions",
-                        () => (),
-                        Colors.pink,
-                        BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
-                      ),
-                    ],
-                  )),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.1), spreadRadius: -1, blurRadius: 2, offset: Offset(0, 0)),
+                  ],
+                ),
+                child: Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide.none),
+                    elevation: 0,
+                    child: Column(
+                      children: [
+                        buildInkWellButton(
+                          Icons.password_outlined,
+                          "Change Password",
+                          "Change Password",
+                          () => (),
+                          Colors.orange,
+                          BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                        ),
+                        buildDivider(),
+                        buildInkWellButton(
+                          Icons.settings,
+                          "Settings",
+                          "Settings",
+                          () => Navigator.push(context, MaterialPageRoute(builder: (context) => Settings())),
+                          Colors.indigo,
+                          BorderRadius.zero,
+                        ),
+                        buildDivider(),
+                        buildInkWellButton(
+                          Icons.laptop,
+                          "Sessions",
+                          "Sessions",
+                          () => (),
+                          Colors.blue,
+                          BorderRadius.zero,
+                        ),
+                        buildDivider(),
+                        buildInkWellButton(
+                          Icons.subscriptions_outlined,
+                          "Subscriptions (balance)",
+                          "Subscriptions",
+                          () => (),
+                          Colors.pink,
+                          BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                        ),
+                      ],
+                    )),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  shadowColor: Colors.black.withOpacity(0.5),
-                  elevation: 5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.1), spreadRadius: -1, blurRadius: 2, offset: Offset(0, 0)),
+                  ],
+                ),
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide.none),
+                  elevation: 0,
                   child: Column(
                     children: [
                       buildInkWellButton(
@@ -97,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         "DicUsers",
                         () => (),
                         Colors.teal,
-                        BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                        BorderRadius.zero,
                       ),
                       buildDivider(),
                       buildInkWellButton(
@@ -109,7 +122,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                       ),
                     ],
-                  )),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -123,9 +138,9 @@ class _ProfilePageState extends State<ProfilePage> {
       borderRadius: borderRadius,
       child: Column(
         children: [
-          SizedBox(height: 8),
+          SizedBox(height: 3),
           Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -149,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 3),
         ],
       ),
     );

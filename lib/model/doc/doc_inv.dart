@@ -1,3 +1,5 @@
+import '../../share/utils.dart';
+
 class DocInv {
   late int id;
   late int typeId;
@@ -18,17 +20,24 @@ class DocInv {
   late double skidka;
   late int priceIndex;
   late int toWhId;
-  late bool hasError;
+  late int hasError;
   late int reys;
   late double bnProcent;
   late String myUIID;
   late int isCur;
   late double curRate;
   late int docNum;
-  late bool annul;
+  late int annul;
   late int userId;
   late int isRass;
   late String rassDate;
+
+  late int isRecovered;
+  late int isSent;
+  late int isAccepted;
+  late int isDraft;
+  late String contraName;
+  late String whName;
 
   DocInv({
     required this.id,
@@ -61,41 +70,52 @@ class DocInv {
     required this.userId,
     required this.isRass,
     required this.rassDate,
+    required this.isRecovered,
+    required this.isSent,
+    required this.isAccepted,
+    required this.isDraft,
+    required this.contraName,
+    required this.whName,
   });
 
   factory DocInv.fromJson(Map<String, dynamic> json) {
     return DocInv(
-      id: json['id'],
-      typeId: json['type_id'],
-      curdate: json['curdate'],
-      curtime: json['curtime'],
-      contraId: json['contra_id'],
-      notes: json['notes'],
-      itogSumm: json['itog_summ'],
-      itogStdSumm: json['itog_std_summ'],
-      itogKg: json['itog_kg'],
-      itogCase: json['itog_case'],
-      itogPc: json['itog_pc'],
-      curtime1: json['curtime1'],
-      whId: json['wh_id'],
-      isPrinted: json['is_printed'],
-      xarajat: json['xarajat'],
-      srok: json['srok'],
-      skidka: json['skidka'],
-      priceIndex: json['price_index'],
-      toWhId: json['to_wh_id'],
-      hasError: json['has_error'],
-      reys: json['reys'],
-      bnProcent: json['bn_procent'],
-      myUIID: json['my_uiid'],
-      isCur: json['is_cur'],
-      curRate: json['cur_rate'],
-      docNum: json['doc_num'],
-      annul: json['annul'],
-      userId: json['user_id'],
-      isRass: json['is_rass'],
-      rassDate: json['rass_date'],
-    );
+        id: json['id'],
+        typeId: json['type_id'],
+        curdate: json['curdate'],
+        curtime: json['curtime'],
+        contraId: json['contra_id'],
+        notes: json['notes'],
+        itogSumm: json['itog_summ'],
+        itogStdSumm: json['itog_std_summ'],
+        itogKg: json['itog_kg'],
+        itogCase: json['itog_case'],
+        itogPc: json['itog_pc'],
+        curtime1: json['curtime1'],
+        whId: json['wh_id'],
+        isPrinted: json['is_printed'],
+        xarajat: json['xarajat'],
+        srok: json['srok'],
+        skidka: json['skidka'],
+        priceIndex: json['price_index'],
+        toWhId: json['to_wh_id'],
+        hasError: json['has_error'],
+        reys: json['reys'],
+        bnProcent: json['bn_procent'],
+        myUIID: json['my_uiid'],
+        isCur: json['is_cur'],
+        curRate: json['cur_rate'],
+        docNum: json['doc_num'],
+        annul: json['annul'],
+        userId: json['user_id'],
+        isRass: json['is_rass'],
+        rassDate: json['rass_date'],
+        isRecovered: json['is_recovered'],
+        isSent: json['is_sent'],
+        isAccepted: json['rass_date'],
+        isDraft: json['is_draft'],
+        contraName: json['contra_name'],
+        whName: json['wh_name']);
   }
 
   Map<String, dynamic> toJson() {
@@ -140,30 +160,36 @@ class DocInv {
     curtime = map['curtime'] ?? "";
     contraId = map['contra_id'] ?? 0;
     notes = map['notes'] ?? "";
-    itogSumm = map['itog_summ'] ?? 0;
+    itogSumm = Utils.checkDouble(map['itog_summ']);
     itogStdSumm = map['itog_std_summ'] ?? 0;
-    itogKg = map['itog_kg'] ?? 0;
-    itogCase = map['itog_case'] ?? 0;
-    itogPc = map['itog_pc'] ?? 0;
+    itogKg = Utils.checkDouble(map['itog_kg']);
+    itogCase = Utils.checkDouble(map['itog_case']);
+    itogPc = Utils.checkDouble(map['itog_pc']);
     curtime1 = map['curtime1'] ?? "";
     whId = map['wh_id'] ?? 0;
     isPrinted = map['is_printed'] ?? 0;
     xarajat = map['xarajat'] ?? 0;
     srok = map['srok'] ?? "";
-    skidka = map['skidka'] ?? 0;
+    skidka = Utils.checkDouble(map['skidka']);
     priceIndex = map['price_index'] ?? 0;
     toWhId = map['to_wh_id'] ?? 0;
-    hasError = map['has_error'] ?? false;
+    hasError = map['has_error'] ?? 0;
     reys = map['reys'] ?? 0;
     bnProcent = map['bn_procent'] ?? 0;
     myUIID = map['my_uiid'] ?? "";
     isCur = map['is_cur'] ?? 0;
-    curRate = map['cur_rate'] ?? 0;
+    curRate = Utils.checkDouble(map['cur_rate']);
     docNum = map['doc_num'] ?? 0;
-    annul = map['annul'] ?? false;
+    annul = map['annul'] ?? 0;
     userId = map['user_id'] ?? 0;
     isRass = map['is_rass'] ?? 0;
     rassDate = map['rass_date'] ?? "";
+    isRecovered = map['is_recovered'] ?? 0;
+    isSent = map['is_sent'] ?? 0;
+    isAccepted = map['is_accepted'] ?? 0;
+    isDraft = map['is_draft'] ?? 0;
+    contraName = map['contra_name'] ?? "";
+    whName = map['wh_name'] ?? "";
   }
 
   Map<String, dynamic> toMap() {
@@ -198,7 +224,12 @@ class DocInv {
     map['user_id'] = userId;
     map['is_rass'] = isRass;
     map['rass_date'] = rassDate;
-
+    map['is_recovered'] = isRecovered;
+    map['is_sent'] = isSent;
+    map['is_accepted'] = isAccepted;
+    map['is_drift'] = isDraft;
+    map['contra_name'] = contraName;
+    map['wh_name'] = whName;
     return map;
   }
 }

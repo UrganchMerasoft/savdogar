@@ -1,9 +1,9 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_savdogar/screens/docs/inv/doc_inv_provider.dart';
 import 'package:flutter_savdogar/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'core/mysettings.dart';
 
 void main() async {
@@ -13,6 +13,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<MySettings>(create: (_) => MySettings(prefs)),
+      ChangeNotifierProvider<DocInvProvider>(create: (_) => DocInvProvider()),
     ],
     child: const MyApp(),
   ));
@@ -23,12 +24,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<MySettings>(context);
+    // final settings = Provider.of<MySettings>(context);
 
     // setInitialData(settings);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'HOD',
       theme: FlexThemeData.light(scheme: FlexScheme.blueM3),
       darkTheme: FlexThemeData.dark(scheme: FlexScheme.blueM3),
       // themeMode: settings.theme == 0 ? ThemeMode.system : (settings.theme == 2 ? ThemeMode.light : ThemeMode.dark),

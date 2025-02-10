@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   String phone = "";
   String server = "";
   String serverName = "";
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   int counterSeconds = 60;
   Timer? timer;

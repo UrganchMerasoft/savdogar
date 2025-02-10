@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_savdogar/screens/dashboard/dashboard.dart';
+import 'package:flutter_savdogar/screens/dics/dic_cat.dart';
 import 'package:flutter_savdogar/screens/dics/dic_contra.dart';
-import 'package:flutter_savdogar/screens/dics/dic_prod.dart';
 import 'package:flutter_savdogar/screens/dics/dic_region.dart';
+import 'package:flutter_savdogar/screens/dics/dic_zatrat.dart';
+import 'package:flutter_savdogar/screens/dics/supplier.dart';
 import 'package:flutter_savdogar/screens/docs/cash/doc_cash.dart';
+import 'package:flutter_savdogar/screens/docs/cash/doc_cash_edit.dart';
 import 'package:flutter_savdogar/screens/profile/profile.dart';
 import 'package:flutter_savdogar/screens/reports/reports.dart';
+import 'package:line_icons/line_icons.dart';
 
 import '../docs/inv/doc_inv.dart';
 
@@ -18,18 +22,207 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int tabIndex = 0;
+  int backPressCounter = 0;
+  int backPressTotal = 2;
+  final ValueNotifier<bool> _backPressAllowed = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Savdogar Mobile"),
-        actions: [
-          Visibility(visible: tabIndex == 3, child: IconButton(onPressed: () {}, icon: Icon(Icons.search))),
-        ],
+    return ValueListenableBuilder(
+      builder: (context, value, child) {
+        return PopScope(
+          canPop: value,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) {
+              _showExitSnackBar(context);
+              _allowBackPress();
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text("Savdogar Mobile"),
+              actions: [
+                Visibility(visible: tabIndex == 3, child: IconButton(onPressed: () {}, icon: const Icon(Icons.search))),
+              ],
+            ),
+            body: getBodyFromPage(),
+            bottomNavigationBar: getNavBar(),
+          ),
+        );
+      },
+      valueListenable: _backPressAllowed,
+    );
+  }
+
+  Future<void> _allowBackPress() async {
+    _backPressAllowed.value = true;
+    await Future.delayed(const Duration(milliseconds: 2000));
+    _backPressAllowed.value = false;
+  }
+
+  void _showExitSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Chiqish uchun ikki marta bosing!", style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
       ),
-      body: getBodyFromPage(),
-      bottomNavigationBar: getNavBar(),
+    );
+  }
+
+  getBody() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            getDocType("Кассовые дoкументы", (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DocCashPage()))),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getDocAction1(
+                  "Приход",
+                  Colors.green,
+                  (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => DocCashEditPage(tabIndex: 0))),
+                ),
+                SizedBox(width: 5),
+                getDocAction1(
+                  "Расход",
+                  Colors.red,
+                  (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => DocCashEditPage(tabIndex: 1))),
+                ),
+                SizedBox(width: 5),
+                getDocAction1(
+                  "Затрата",
+                  Colors.red,
+                  (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => DocCashEditPage(tabIndex: 2))),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            getDocType("Документы склада", (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DocInvPage()))),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                getDocAction1(
+                  "Приход",
+                  Colors.green,
+                  (context) => (),
+                ),
+                SizedBox(width: 5),
+                getDocAction1(
+                  "Расход",
+                  Colors.red,
+                  (context) => (),
+                ),
+                SizedBox(width: 5),
+                getDocAction1(
+                  "Возвраты",
+                  Colors.red,
+                  (context) => (),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.1), spreadRadius: -1, blurRadius: 2, offset: Offset(0, 0)),
+                ],
+              ),
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide.none),
+                elevation: 0,
+                child: Column(
+                  children: [
+                    buildDicButton(
+                      "Акт-сверка с клиентами",
+                      Icons.how_to_reg_outlined,
+                      (context) => (),
+                      BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    ),
+                    buildDivider(),
+                    buildDicButton(
+                      "Остаток склада",
+                      Icons.shopping_basket_outlined,
+                      (context) => (),
+                      BorderRadius.zero,
+                    ),
+                    buildDivider(),
+                    buildDicButton(
+                      "Дебитор-кредитор",
+                      Icons.local_atm,
+                      (context) => (),
+                      BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Справочники", style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.w400)),
+                IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.1), spreadRadius: -1, blurRadius: 2, offset: Offset(0, 0)),
+                ],
+              ),
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide.none),
+                elevation: 0,
+                child: Column(
+                  children: [
+                    buildDicButton(
+                      "Клиентская база",
+                      Icons.people_alt_outlined,
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicContraPage())),
+                      BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                    ),
+                    buildDivider(),
+                    buildDicButton(
+                      "Поставщики",
+                      Icons.corporate_fare,
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => Supplier())),
+                      BorderRadius.zero,
+                    ),
+                    buildDivider(),
+                    buildDicButton(
+                      "Категория товаров",
+                      Icons.dashboard,
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicCatPage())),
+                      BorderRadius.zero,
+                    ),
+                    buildDivider(),
+                    buildDicButton(
+                      "Регионы",
+                      LineIcons.map,
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicRegionPage())),
+                      BorderRadius.zero,
+                    ),
+                    buildDivider(),
+                    buildDicButton(
+                      "Затрата",
+                      LineIcons.coins,
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicZatratPage())),
+                      BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -46,78 +239,6 @@ class _HomePageState extends State<HomePage> {
     if (tabIndex == 3) {
       return const ProfilePage();
     }
-  }
-
-  getBody() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            getDocType("Кассовые дoкументы", (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DocCashPage()))),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                getDocAction1("Приход", Colors.green),
-                getDocAction1("Расход", Colors.red),
-                getDocAction1("Затрата", Colors.red),
-              ],
-            ),
-            const SizedBox(height: 10),
-            getDocType("Документы склада", (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DocInvPage()))),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                getDocAction1("Приход", Colors.green),
-                getDocAction1("Расход", Colors.red),
-                getDocAction1("Затрата", Colors.red),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black, width: 0.2))),
-              child: Column(
-                children: [
-                  getDocAction2("Акт-сверка с клиентами", Icons.how_to_reg_outlined, (context) => null),
-                  const SizedBox(height: 20),
-                  getDocAction2("Остаток склада", Icons.shopping_basket_outlined, (context) => null),
-                  const SizedBox(height: 20),
-                  getDocAction2("Дебитор-кредитор", Icons.local_atm, (context) => null),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Справочники", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.black, width: 0.2))),
-              child: Column(
-                children: [
-                  getDocAction2("Клиентская база", Icons.people_alt_outlined,
-                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicContraPage()))),
-                  const SizedBox(height: 20),
-                  getDocAction2("Поставщики", Icons.corporate_fare, (context) => null),
-                  const SizedBox(height: 20),
-                  getDocAction2("Категория товаров", Icons.dashboard,
-                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicProdPage()))),
-                  const SizedBox(height: 20),
-                  getDocAction2("Регионы", Icons.map_outlined,
-                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const DicRegionPage()))),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 
   getNavBar() {
@@ -143,62 +264,66 @@ class _HomePageState extends State<HomePage> {
   }
 
   getDocType(String text, Function func) {
-    return GestureDetector(
-      onTap: () {
+    return ElevatedButton(
+      onPressed: () {
         func(context);
       },
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 60,
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        decoration: BoxDecoration(color: Theme.of(context).colorScheme.primaryContainer, borderRadius: BorderRadius.circular(10)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(text, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16)),
-            const Icon(Icons.chevron_right),
-          ],
-        ),
+      style: ElevatedButton.styleFrom(
+        fixedSize: Size.fromHeight(55),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide.none),
       ),
-    );
-  }
-
-  getDocAction1(String text, Color color) {
-    return Expanded(
-      child: Container(
-        height: 65,
-        margin: const EdgeInsets.only(right: 5),
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.outline.withAlpha(25),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade600 : Colors.grey.shade300),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(text, style: Theme.of(context).textTheme.bodyLarge),
-            Icon(Icons.add, color: color, size: 22),
-          ],
-        ),
-      ),
-    );
-  }
-
-  getDocAction2(String text, IconData icon, Function(BuildContext context) func) {
-    return GestureDetector(
-      onTap: () {
-        func(context);
-      },
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(icon, color: Colors.grey.shade700),
-          const SizedBox(width: 10),
-          Text(text, style: Theme.of(context).textTheme.bodyLarge),
-          const Spacer(),
+          Text(text, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16)),
           Icon(Icons.chevron_right, color: Colors.grey.shade600),
         ],
+      ),
+    );
+  }
+
+  Widget buildDivider() {
+    return Divider(height: 1, thickness: 1);
+  }
+
+  getDocAction1(String text, Color color, Function(BuildContext context) func) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        fixedSize: Size.fromHeight(50),
+        backgroundColor: Colors.grey.shade200,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide.none),
+      ),
+      onPressed: () => func(context),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(text, style: Theme.of(context).textTheme.bodyLarge),
+          Icon(Icons.add, color: color, size: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDicButton(String text, IconData icon, Function(BuildContext context) func, BorderRadius? borderRadius) {
+    return InkWell(
+      borderRadius: borderRadius,
+      onTap: () {
+        Future.delayed(Duration(milliseconds: 200), () => func(context));
+      },
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.grey.shade700),
+            const SizedBox(width: 10),
+            Text(text, style: Theme.of(context).textTheme.bodyLarge),
+            const Spacer(),
+            Icon(Icons.chevron_right, color: Colors.grey.shade600),
+          ],
+        ),
       ),
     );
   }
