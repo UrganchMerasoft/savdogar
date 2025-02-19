@@ -84,7 +84,9 @@ class _ViewOstState extends State<ViewOst> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Expanded(child: Text(filteredList[index].ostSum.toString(), style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 15))),
+                          Expanded(
+                              child:
+                                  Text(filteredList[index].ostSum.toString(), style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 15))),
                           Text(
                             "${filteredList[index].ostQty}",
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16, color: Colors.blue),
@@ -100,27 +102,17 @@ class _ViewOstState extends State<ViewOst> {
   }
 
   Future<void> getOstData(MySettings settings) async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      String body = jsonEncode({"date2": "2025-01-23", "wh_id": "0"});
-      var res = await MyHttpService.POST(context, "${settings.serverUrl}/reports/view_ost", body, settings);
-
-      var data = jsonDecode(res);
-      setState(() {
-        ostData = (data["cat"] as List).map((e) => OstCatModel.fromMapObject(e)).toList();
-        isLoading = false;
-      });
-      settings.saveAndNotify();
-      print(res);
-    } catch (e) {
-      // setState(() {
-      //   isLoading = false;
-      // });
-      print("Error fetching data: $e");
-    }
+    setState(() {
+      isLoading = true;
+    });
+    String body = jsonEncode({"date2": "2024-11-13", "wh_id": "0"});
+    var res = await MyHttpService.POST(context, "${settings.serverUrl}/reports/view_ost", body, settings);
+    var data = jsonDecode(res);
+    ostData = (data as List).map((e) => OstCatModel.fromMapObject(e)).toList();
+    isLoading = false;
+    debugPrint(res);
+    settings.saveAndNotify();
+    debugPrint(res);
   }
 
   filteredOstData(MySettings settings) {

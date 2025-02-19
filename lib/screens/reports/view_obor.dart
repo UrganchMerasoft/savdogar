@@ -105,9 +105,9 @@ class _ViewOborState extends State<ViewObor> {
         isLoading = true;
       });
       String body = jsonEncode({
-        "date1": "2024-10-01",
-        "date2": "2024-11-19",
-        "product_id": "60",
+        "date1": "2024-01-01",
+        "date2": "2025-11-19",
+        "product_id": "1",
       });
       var res = await MyHttpService.POST(context, "${settings.serverUrl}/reports/view_obor", body, settings);
 

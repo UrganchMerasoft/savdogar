@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_savdogar/screens/home/home.dart';
 
+import 'screens/account/login.dart';
+
 class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
 
@@ -11,6 +13,6 @@ class Wrapper extends StatefulWidget {
 class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
-    return const HomePage();
+    return LoginPage();
   }
 }

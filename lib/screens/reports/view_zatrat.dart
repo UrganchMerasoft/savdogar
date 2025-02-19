@@ -107,22 +107,18 @@ class _ViewZatratState extends State<ViewZatrat> {
       isLoading = true;
     });
 
-    String body = jsonEncode({});
+    String body = jsonEncode({
+      "date1": "2024-01-01",
+      "date2": "2024-12-31",
+    });
     var res = await MyHttpService.POST(context, "${settings.serverUrl}/reports/view_zatrat", body, settings);
 
     var data = jsonDecode(res);
     setState(() {
-      zatratList = (data as List).map((e) => ZatratModel.fromMap(e)).toList();
-      isLoading = false;
+      zatratList = (data["info"] as List).map((e) => ZatratModel.fromMap(e)).toList();
     });
     settings.saveAndNotify();
     debugPrint(res);
-    // } catch (e) {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    //   debugPrint("Error fetching data: $e");
-    // }
   }
 
   filteredZatratData(MySettings settings) {

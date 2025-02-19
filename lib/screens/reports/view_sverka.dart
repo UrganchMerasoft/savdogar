@@ -33,6 +33,7 @@ class _ViewSverkaState extends State<ViewSverka> {
 
   bool first = true;
 
+
   @override
   void initState() {
     date1.text = Utils.myDateFormatFromStr1(Utils.formatDDMMYYYY, sentDate.toString());
@@ -99,7 +100,7 @@ class _ViewSverkaState extends State<ViewSverka> {
                     children: [
                       CustomPaint(
                         painter: isLeft ? MyChatBubbleLeft() : MyChatBubbleRight(),
-                        size: const Size(280, 125),
+                        size: const Size(280, 110),
                       ),
                       Padding(
                         padding: isLeft ? const EdgeInsets.only(left: 35, top: 10, right: 75) : const EdgeInsets.only(left: 10, right: 35, top: 5),

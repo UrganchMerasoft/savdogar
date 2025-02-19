@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_savdogar/core/mysettings.dart';
 import 'package:flutter_savdogar/model/dic/dic_contra.dart';
 import 'package:flutter_savdogar/model/doc/doc_inv.dart';
-import 'package:flutter_savdogar/screens/docs/inv/edit_inv_list.dart';
 import 'package:flutter_savdogar/screens/docs/inv/doc_inv_provider.dart';
+import 'package:flutter_savdogar/screens/docs/inv/edit_inv_list.dart';
 import 'package:flutter_savdogar/share/utils.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +28,6 @@ class _DocInvEditState extends State<DocInvEdit> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final settings = Provider.of<MySettings>(context, listen: false);
       final docInvProvider = Provider.of<DocInvProvider>(context, listen: false);
-
       if (widget.docInv != null) {
         docInvProvider.loadFields(widget.docInv!);
         docInvProvider.getInvList(settings, context, widget.docInv!.id);

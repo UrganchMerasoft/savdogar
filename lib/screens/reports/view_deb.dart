@@ -133,10 +133,15 @@ class _ViewDebState extends State<ViewDeb> {
     setState(() {
       isLoading = true;
     });
-    String body = jsonEncode({"date2": "2025-01-01", "minmax": "5"});
+    String body = jsonEncode({
+      "date2": "2024-11-13",
+      "minmax": "5",
+    });
     var res = await MyHttpService.POST(context, "${settings.serverUrl}/reports/view_deb", body, settings);
     var data = jsonDecode(res);
     debList = (data as List).map((e) => DebModel.fromMap(e)).toList();
+    filteredList = debList;
+    filteredDebData(settings);
     isLoading = false;
     settings.saveAndNotify();
     debugPrint(res);
