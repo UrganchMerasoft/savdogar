@@ -5,7 +5,6 @@ import 'package:flutter_savdogar/screens/reports/view_client_move.dart';
 import 'package:flutter_savdogar/screens/reports/view_daily.dart';
 import 'package:flutter_savdogar/screens/reports/view_deb.dart';
 import 'package:flutter_savdogar/screens/reports/view_obor.dart';
-import 'package:flutter_savdogar/screens/reports/view_ost.dart';
 import 'package:flutter_savdogar/screens/reports/view_prod_move.dart';
 import 'package:flutter_savdogar/screens/reports/view_result.dart';
 import 'package:flutter_savdogar/screens/reports/view_sverka.dart';
@@ -23,9 +22,7 @@ class _ReportsState extends State<Reports> {
   @override
   Widget build(BuildContext context) {
     MySettings settings = Provider.of<MySettings>(context);
-    return Scaffold(
-      body: getBody(settings),
-    );
+    return Scaffold(body: getBody(settings));
   }
 
   Widget getBody(MySettings settings) {
@@ -46,11 +43,12 @@ class _ReportsState extends State<Reports> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide.none),
                 elevation: 0,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     buildDicButton(
                       "Остаток товаров",
                       Icons.people_alt_outlined,
-                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOst())),
+                      (context) => (),
                       BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                     ),
                     buildDivider(),
