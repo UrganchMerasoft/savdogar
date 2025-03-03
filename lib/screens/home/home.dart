@@ -9,6 +9,7 @@ import 'package:flutter_savdogar/screens/docs/cash/doc_cash.dart';
 import 'package:flutter_savdogar/screens/docs/cash/doc_cash_edit.dart';
 import 'package:flutter_savdogar/screens/profile/profile.dart';
 import 'package:flutter_savdogar/screens/reports/reports.dart';
+import 'package:flutter_savdogar/screens/reports/view_ost.dart';
 import 'package:line_icons/line_icons.dart';
 
 import '../docs/inv/doc_inv.dart';
@@ -149,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                     buildDicButton(
                       "Остаток склада",
                       Icons.shopping_basket_outlined,
-                      (context) => (),
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => const ViewOst())),
                       BorderRadius.zero,
                     ),
                     buildDivider(),
@@ -297,9 +298,9 @@ class _HomePageState extends State<HomePage> {
       onPressed: () => func(context),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(text, style: Theme.of(context).textTheme.bodyLarge),
+          Text(text, style: Theme.of(context).textTheme.titleSmall),
+          SizedBox(width: 10),
           Icon(Icons.add, color: color, size: 20),
         ],
       ),

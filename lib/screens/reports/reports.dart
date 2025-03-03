@@ -5,6 +5,7 @@ import 'package:flutter_savdogar/screens/reports/view_client_move.dart';
 import 'package:flutter_savdogar/screens/reports/view_daily.dart';
 import 'package:flutter_savdogar/screens/reports/view_deb.dart';
 import 'package:flutter_savdogar/screens/reports/view_obor.dart';
+import 'package:flutter_savdogar/screens/reports/view_ost.dart';
 import 'package:flutter_savdogar/screens/reports/view_prod_move.dart';
 import 'package:flutter_savdogar/screens/reports/view_result.dart';
 import 'package:flutter_savdogar/screens/reports/view_sverka.dart';
@@ -48,7 +49,7 @@ class _ReportsState extends State<Reports> {
                     buildDicButton(
                       "Остаток товаров",
                       Icons.people_alt_outlined,
-                      (context) => (),
+                      (context) => Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOst())),
                       BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                     ),
                     buildDivider(),

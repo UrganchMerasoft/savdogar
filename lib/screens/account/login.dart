@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/mysettings.dart';
-import '../home/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,30 +31,39 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 60),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: TextField(
-              controller: phoneController,
-              decoration: InputDecoration(
-                labelText: "Введите номер телефона",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            child: SizedBox(
+              height: 50,
+              child: TextField(
+                controller: phoneController,
+                decoration: InputDecoration(
+                  labelText: "Введите номер телефона",
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
+                  contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                ),
               ),
             ),
           ),
           SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: TextField(
-              controller: codeController,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
+            child: SizedBox(
+              height: 50,
+              child: TextField(
+                controller: codeController,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
                     onPressed: () {
                       isVisibility = !isVisibility;
                       setState(() {});
                     },
-                    icon: isVisibility == true ? Icon(Icons.visibility) : Icon(Icons.visibility_off)),
-                labelText: "Введите пароль",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                    icon: isVisibility == true ? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+                  ),
+                  labelText: "Введите пароль",
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey)),
+                  contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                ),
               ),
             ),
           ),
@@ -69,9 +77,10 @@ class _LoginPageState extends State<LoginPage> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                settings.token="123456";
+                settings.saveAndNotify();
               },
-              child: Text("Войти", style: TextStyle(fontSize: 18)),
+              child: Text("Войти", style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white)),
             ),
           ),
         ],

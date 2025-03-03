@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_savdogar/core/mysettings.dart';
 import 'package:flutter_savdogar/screens/profile/settings/settings.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -11,6 +13,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
+    MySettings settings = Provider.of<MySettings>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -121,6 +124,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         Colors.orangeAccent,
                         BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
                       ),
+                      buildDivider(),
+                      buildInkWellButton(
+                        Icons.logout,
+                        "Log Out",
+                        "Log Out",
+                        () => logOut(settings),
+                        Colors.pink,
+                        BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                      ),
                     ],
                   ),
                 ),
@@ -154,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18, fontWeight: FontWeight.w400)),
+                    Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w400)),
                     SizedBox(height: 5),
                     Text(subtitle, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 14, fontWeight: FontWeight.w300)),
                   ],
@@ -172,5 +184,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget buildDivider() {
     return Divider(height: 1, thickness: 1);
+  }
+
+  logOut(MySettings settings) {
+    settings.token = "";
+    settings.saveAndNotify();
   }
 }
